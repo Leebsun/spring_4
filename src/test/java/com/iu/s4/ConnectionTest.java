@@ -14,20 +14,14 @@ import com.iu.notice.NoticeDAO;
 import com.iu.notice.NoticeDTO;
 
 public class ConnectionTest extends AbstractTest {
-	
-	@Inject
-	NoticeDAO noticeDAO;
 
-	@Test
+	@Override
 	public void test() {
-		try {
-			NoticeDTO noticeDTO=noticeDAO.selectOne(1);
-			System.out.println(noticeDTO.getTitle());
-			System.out.println(noticeDTO.getContents());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
+		
 	}
+	
+	
+
 
 }

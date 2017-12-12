@@ -8,23 +8,26 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import com.iu.board.BoardDTO;
 import com.iu.s4.AbstractTest;
+import com.iu.util.RowNum;
 
 public class NoticeDAOTest extends AbstractTest {
 	
 	@Inject
 	NoticeDAO noticeDAO;
 	
-	public void totalCount()throws Exception{
-		int result=noticeDAO.totalCount();
+	public void totalCount(RowNum rowNum)throws Exception{
+		int result=noticeDAO.totalCount(rowNum);
 		System.out.println(result);
 	}
 	
 	
 
 	public void test3()throws Exception{
-		List<NoticeDTO> ar=noticeDAO.selectList(1,10);
-		for(NoticeDTO noticeDTO : ar){
+		RowNum rowNum = new RowNum();
+		List<BoardDTO> ar=noticeDAO.selectList(rowNum);
+		for(BoardDTO noticeDTO : ar){
 			System.out.println(noticeDTO.getNum());
 			System.out.println(noticeDTO.getTitle());
 		}
@@ -79,7 +82,7 @@ public class NoticeDAOTest extends AbstractTest {
 	@Test
 	public void testtt(){
 		try {
-			this.test3();
+			this.test();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

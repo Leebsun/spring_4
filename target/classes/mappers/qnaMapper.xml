@@ -8,6 +8,15 @@
   	like '%'||#{search}||'%'
   </sql>
   
+  <update id="stepUpdate" parameterType="QnaDTO">
+  	 <![CDATA[
+  	update qna set step=step+1 where ref=#{ref} and step>#{step}
+  	]]>
+  </update>
+  <insert id="reply" parameterType="QnaDTO">
+  	insert into qna values(#{num},#{title},#{writer},#{contents},#{num})
+  </insert>
+  
   <select id="selectOne" parameterType="int" resultType="com.iu.board.BoardDTO">
   	select * from qna where num=#{num}
   </select>

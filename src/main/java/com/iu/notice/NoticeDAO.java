@@ -1,9 +1,6 @@
 package com.iu.notice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -15,29 +12,23 @@ import com.iu.board.BoardDTO;
 import com.iu.util.RowNum;
 
 @Repository
-public class NoticeDAO implements BoardDAO {
-	
+public class NoticeDAO implements BoardDAO{
+
 	@Inject
 	private SqlSession sqlSession;
-	private static final String namespace="noticeMapper.";
+	private static final String namespace = "noticeMapper.";	//어떤 mapper파일을 쓸지 명시해주는 것
+	//private static final String namespace2 = "testMapper.";	매핑을 두개 받아야 할 때는 새롭게 변수로 선언하면 됨
 	
 	@Override
 	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
-
-		
-		return sqlSession.selectList(namespace+"selectList",rowNum);
-	}
-
-	@Override
-	public BoardDTO selectOne(int num) throws Exception {
-		
-		return sqlSession.selectOne(namespace+"selectOne", num);
+		return sqlSession.selectList(namespace+"selectList", rowNum); 
 	}
 
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
-		System.out.println("Before: "+boardDTO.getNum());
-		int result= sqlSession.insert(namespace+"insert", boardDTO);
+		System.out.println("Before:"+boardDTO.getNum());
+		int result = sqlSession.insert(namespace+"insert", boardDTO);
+		System.out.println("After:"+boardDTO.getNum());
 		return result;
 	}
 
@@ -47,13 +38,8 @@ public class NoticeDAO implements BoardDAO {
 	}
 
 	@Override
-	public int delete(int num) throws Exception {
-		return sqlSession.delete(namespace+"delete", num);
-	}
-
-	@Override
 	public int totalCount(RowNum rowNum) throws Exception {
-		return sqlSession.selectOne(namespace+"selectOne", rowNum);
+		return sqlSession.selectOne(namespace+"totalCount", rowNum);
 	}
 
 	@Override
@@ -63,41 +49,15 @@ public class NoticeDAO implements BoardDAO {
 
 	@Override
 	public int getNum() throws Exception {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne(namespace+"getNum");
 	}
-	//private static final String namespace2="testMapper.";
-	
-	
-	
-	/*public int totalCount()throws Exception{
-		return sqlSession.selectOne(namespace+"totalCount");
-	}
-	
-	public List<NoticeDTO> selectList(int startRow, int lastRow)throws Exception{
-		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("startRow", startRow);
-		map.put("lastRow", lastRow);
-		map.put("kind", "title");
-		map.put("search", "iu");
-		
-		return sqlSession.selectList(namespace+"selectList",map);
-	}
-	
+
 	public NoticeDTO selectOne(int num) throws Exception{
-		return sqlSession.selectOne(namespace+"selectOne", num); //파라미터는 1개만 넘길 수 있다.
+		return sqlSession.selectOne(namespace+"selectOne", num);	//한 개의 파라미터만 보낼 수 있음
 	}
 	
-	public int insert(NoticeDTO noticeDTO) throws Exception{
-		return sqlSession.insert(namespace+"insert", noticeDTO);
-	}
-	
-	public int delete(int num)throws Exception{
+	public int delete(int num) throws Exception{
 		return sqlSession.delete(namespace+"delete", num);
 	}
 	
-	public int update(NoticeDTO noticeDTO) throws Exception{
-		return sqlSession.update(namespace+"update", noticeDTO);
-	}*/
-
 }

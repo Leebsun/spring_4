@@ -4,49 +4,72 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="qnaMapper">
   
-  <!-- selectList  -->
-  <select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.qna.QnaDTO">
+  <sql id="kind">
+  	like '%'||#{search}||'%'
+  </sql>
   
-  
+  <select id="selectOne" parameterType="int" resultType="com.iu.board.BoardDTO">
+  	select * from qna where num=#{num}
   </select>
   
-  <!-- selectOne -->
-  <select id="selectOne">
-  
+  <select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
+  	select * from
+  	(select rownum r, N.* from
+  	(select * from qna 
+  	<if test="kind == 'Title'">
+  		where title
+  		<include refid="kind"></include>
+  	</if>
+  	<if test="kind == 'Writer'">
+  		where writer
+  		<include refid="kind"></include>
+  	</if>
+  	<if test="kind == 'Contents'">
+  		where contents
+  		<include refid="kind"></include>
+  	</if>
+  	order by ref desc, step asc) N)
+  	where r between #{startRow} and #{lastRow}
   </select>
   
-  <!-- delete -->
-  <delete id="delete">
+  <insert id="insert" parameterType="com.iu.board.BoardDTO">
+  	<selectKey keyProperty="num" resultType="int" order="BEFORE">
+  		select board_seq.nextval from dual
+  	</selectKey>
+  	insert into qna
+  	values(#{num},#{title},#{writer},#{contents},sysdate,0,#{num},0,0)
+  </insert>
   
+  <update id="update" parameterType="com.iu.board.BoardDTO">
+  	update qna set title=#{title}, contents=#{contents} where num=#{num}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+	delete qna where num=#{num}
   </delete>
   
-  <!--  update -->
-  
-  <update id="update">
-  
-  </update>
-  
-  <!-- hit  -->
-  
-  <update id="hitUpdate">
-  
-  </update>
-  
-  <!-- totalCount  -->
-  <select id="totalCount">
-  
-  </select>
-  <!-- getNum -->
-  <select id="getNum">
-  
+  <select id="totalCount" parameterType="com.iu.util.RowNum" resultType="int">
+  	select count(*) from qna
+  	<if test="kind == 'title'">
+  		where title
+  		<include refid="kind"></include>
+  	</if>
+  	<if test="kind == 'writer'">
+  		where writer
+  		<include refid="kind"></include>
+  	</if>
+  	<if test="kind == 'contents'">
+  		where contents
+  		<include refid="kind"></include>
+  	</if>
   </select>
   
-  <!--  insert -->
+  <update id="hitUpdate" parameterType="int">
+  	update qna set hit=hit+1 where num=#{num}
+  </update>
   
-  <insert id="">
+  <select id="getNum" resultType="int">
+  	select board_seq.nextval from dual
+  </select>
   
-  </insert>
-    
-
-
   </mapper>

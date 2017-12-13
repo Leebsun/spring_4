@@ -7,27 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.iu.board.BoardDTO;
-import com.iu.notice.NoticeDTO;
-import com.iu.notice.NoticeService;
+import com.iu.qna.QnaDTO;
+import com.iu.qna.QnaService;
 import com.iu.util.ListData;
 
 @Controller
-@RequestMapping(value="/notice/*")
-public class NoticeController {
+@RequestMapping(value="/qna/*")
+public class QnaController {
 
 	@Inject
-	private NoticeService noticeService;
+	private QnaService qnaService;
 	
-	//selectList
-	@RequestMapping(value="noticeList")
-	public ModelAndView selectList(ModelAndView mv, ListData listData){
+	@RequestMapping(value="qnaList")
+	public ModelAndView selectList(ListData listData, ModelAndView mv){
 		try {
-			mv = noticeService.selectList(listData);
+			mv = qnaService.selectList(listData);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,44 +33,39 @@ public class NoticeController {
 		
 		return mv;
 	}
-			
-	//selectOne
-	@RequestMapping(value="noticeView")
+	
+	@RequestMapping(value="qnaView")
 	public ModelAndView selectOne(ModelAndView mv, int num, RedirectAttributes rd){
 		BoardDTO boardDTO = null;
 		try {
-			boardDTO = noticeService.selectOne(num);
+			boardDTO = qnaService.selectOne(num);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		if(boardDTO != null){
 			mv.addObject("view", boardDTO);
 			mv.setViewName("board/boardView");
 		}else{
-			rd.addFlashAttribute("message","해당 번호의 게시물이 존재하지 않습니다.");
-			mv.setViewName("redirect:./noticeList");
+			mv.setViewName("redirect:./qnaList");
+			rd.addFlashAttribute("message", "해당 번호의 게시글이 존재하지 않습니다.");
 		}
-		mv.addObject("board", "notice");
+		mv.addObject("board", "qna");
 		
 		return mv;
 	}
 	
-	//insert --> form 이동
-	@RequestMapping(value="noticeWrite",method=RequestMethod.GET)
+	@RequestMapping(value="qnaWrite", method=RequestMethod.GET)
 	public String insert(Model model){
-		model.addAttribute("board", "notice");
+		model.addAttribute("board", "qna");
 		return "board/boardWrite";
 	}
 	
-	//insert --> DB 처리
-	@RequestMapping(value="noticeWrite",method=RequestMethod.POST)
-	public String insert(RedirectAttributes rd, NoticeDTO boardDTO, HttpSession session){
+	@RequestMapping(value="qnaWrite", method=RequestMethod.POST)
+	public String insert(QnaDTO qnaDTO, RedirectAttributes rd, HttpSession session){
 		int result = 0;
-		
 		try {
-			result = noticeService.insert(boardDTO, session);
+			result = qnaService.insert(qnaDTO, session);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,49 +76,46 @@ public class NoticeController {
 		}
 		rd.addFlashAttribute("message", message);
 		
-		return "redirect:./noticeList";
+		return "redirect:./qnaList";
 	}
 	
-	//update --> form 이동
-	@RequestMapping(value="noticeUpdate",method=RequestMethod.GET)
+	@RequestMapping(value="qnaUpdate", method=RequestMethod.GET)
 	public String update(Model model, int num){
 		BoardDTO boardDTO = null;
 		try {
-			boardDTO = noticeService.selectOne(num);
+			boardDTO = qnaService.selectOne(num);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		model.addAttribute("view", boardDTO);
-		model.addAttribute("board", "notice");
+		model.addAttribute("board", "qna");
 		return "board/boardUpdate";
 	}
 	
-	//update --> DB 처리
-	@RequestMapping(value="noticeUpdate",method=RequestMethod.POST)
-	public String update(BoardDTO boardDTO, RedirectAttributes rd){
+	@RequestMapping(value="qnaUpdate", method=RequestMethod.POST)
+	public String update(QnaDTO qnaDTO, RedirectAttributes rd){
 		int result = 0;
 		try {
-			result = noticeService.update(boardDTO);
+			result = qnaService.update(qnaDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String message = "업데이트 실패";
+		String message = "수정 실패";
 		if(result>0){
-			message = "업데이트 성공";
+			message = "수정 성공";
 		}
 		rd.addFlashAttribute("message", message);
 		
-		return "redirect:./noticeList";
+		return "redirect:./qnaList";
 	}
 	
-	//delete
-	@RequestMapping(value="noticeDelete")
+	@RequestMapping(value="qnaDelete")
 	public String delete(int num, RedirectAttributes rd){
 		int result = 0;
 		try {
-			result = noticeService.delete(num);
+			result = qnaService.delete(num);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,9 +124,7 @@ public class NoticeController {
 		if(result>0){
 			message = "삭제 성공";
 		}
-		rd.addFlashAttribute("message", message);
-		
-		return "redirect:./noticeList";
+		rd.addAttribute("message", message);
+		return "redirect:./qnaList";
 	}
-	
 }

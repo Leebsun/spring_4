@@ -5,21 +5,22 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
 
 import com.iu.board.BoardDAO;
 import com.iu.board.BoardDTO;
 import com.iu.util.RowNum;
 
+@Repository
 public class QnaDAO implements BoardDAO {
-	
+
 	@Inject
 	private SqlSession sqlSession;
-	private static final String namespace="qnaMapper.";
-
+	private static final String namespace = "qnaMapper.";
+	
 	@Override
 	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
-		
-		return sqlSession.selectList(namespace+"selectList",rowNum);
+		return sqlSession.selectList(namespace+"selectList", rowNum);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class QnaDAO implements BoardDAO {
 
 	@Override
 	public int totalCount(RowNum rowNum) throws Exception {
-		return sqlSession.selectOne(namespace+"selectOne", rowNum);
+		return sqlSession.selectOne(namespace+"totalCount", rowNum);
 	}
 
 	@Override

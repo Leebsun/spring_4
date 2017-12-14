@@ -2,12 +2,14 @@ package com.iu.qna;
 
 import com.iu.board.BoardDTO;
 import com.iu.board.BoardFileDTO;
+import com.iu.file.FileDTO;
 
 public class QnaDTO extends BoardFileDTO{
 
 	private int ref;
 	private int depth;
 	private int step;
+	
 	
 	public int getRef() {
 		return ref;

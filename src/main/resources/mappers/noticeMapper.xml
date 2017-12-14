@@ -4,27 +4,9 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="noticeMapper">	<!-- 파일 이름과 동일한 이름으로 맞추기 -->
   
-  
-  
-  
   	<sql id="test">
   		where title like '%'||#{search}||'%'
   	</sql>
-  	
-  	<resultMap type="NoticeDTO" id="NoticeFile">
-   		<id property="num" column="num"/>
-   		<result property="writer" column="writer"/>
-   		<result property="title" column="title"/>
-   		<result property="contents" column="contents"/>
-   		<result property="reg_date" column="reg_date"/>
-   		<result property="hit" column="hit"/>
-   		<collection property="fileNames" javaType="ArrayList" ofType="FileDTO">
-   		<id property="fnum" column="fnum"/>
-   			<result property="num" column="num"/>
-   			<result property="fileName" column="filename"/>
-   			<result property="oriName" column="oriname"/>
-   		</collection>
-   	</resultMap>
   
   	<select id="selectList" parameterType="com.iu.util.RowNum" resultType="com.iu.board.BoardDTO">
   		select * from
@@ -44,12 +26,21 @@
   	</select>
   	<!-- resultType이 List일 경우, generic의 형식만 명시해 줄 경우 알아서 List 형태로 반환해 줌 -->
   	<!-- map을 사용할 때, map의 key 값을 넣어주면 알아서 사용함 -->
+  	
   	<!-- list를 사용할 경우, ${인덱스번호}를 쓰면 되나, 추천 안함 -->
   	
-  	<select id="selectOne" parameterType="java.lang.Integer" resultMap="NoticeFile">
-  		select notice.*,upload.* from notice, upload where notice.num=#{num} and notice.num=upload.num
-  		
+  	<resultMap type="NoticeDTO" id="noticeResult">
+  		<id property="num" column="num"/>
+  		<collection property="fileNames" column="num" ofType="FileDTO" select="selectFile"></collection>
+  	</resultMap>
+  	
+  	<select id="selectOne" parameterType="int" resultMap="noticeResult">
+  		select * from notice where num=#{num}
   	</select>
+  	<select id="selectFile" parameterType="int" resultType="FileDTO">
+  		select * from upload where num=#{num}
+  	</select>
+  	
   	<!-- primative Type은 그냥 int로 써도 됨 -->
   	<!-- reference Type은 그냥 NoticeDTO르 쓰면 못찾으므로 풀패키지 명으로 써야함 -->
   	

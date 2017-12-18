@@ -1,6 +1,7 @@
 package com.iu.notice;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -18,6 +19,10 @@ public class NoticeDAO implements BoardDAO{
 	private SqlSession sqlSession;
 	private static final String namespace = "noticeMapper.";	//어떤 mapper파일을 쓸지 명시해주는 것
 	//private static final String namespace2 = "testMapper.";	매핑을 두개 받아야 할 때는 새롭게 변수로 선언하면 됨
+	
+	public int insertMemo(Map<String, Object> map)throws Exception{
+		return sqlSession.insert(namespace+"memoInsert", map);
+	}
 	
 	@Override
 	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {

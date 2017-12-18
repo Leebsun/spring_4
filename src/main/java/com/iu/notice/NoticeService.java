@@ -1,12 +1,15 @@
 package com.iu.notice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +23,7 @@ import com.iu.util.Pager;
 import com.iu.util.RowNum;
 
 @Service
+@Transactional
 public class NoticeService implements BoardService{
 
 	@Inject
@@ -52,6 +56,7 @@ public class NoticeService implements BoardService{
 		
 		return boardDTO;
 	}
+	
 
 	@Override
 	public int insert(BoardDTO boardDTO, HttpSession session) throws Exception {
@@ -59,6 +64,13 @@ public class NoticeService implements BoardService{
 		//저장 1. 저장경로-realpath
 		//List<FileDTO> names = new ArrayList<FileDTO>();
 		int result = noticeDAO.insert(boardDTO);
+		Map<String, Object> map = new HashMap<>();
+		map.put("num", 701);
+		map.put("title", boardDTO.getTitle());
+		map.put("contents", boardDTO.getContents());
+		result=noticeDAO.insertMemo(map);
+		
+		
 		for (MultipartFile multipartFile : files) {
 			String name=fileSaver.fileSave(multipartFile, session, "upload");
 			FileDTO fileDTO = new FileDTO();

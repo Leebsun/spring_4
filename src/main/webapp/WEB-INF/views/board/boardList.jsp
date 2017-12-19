@@ -80,7 +80,7 @@
 			<span class="list" title="${pager.lastNum+1}">[다음]</span>
 		</c:if>
 	</div>
-	
+
 	<a href="${board}Write">글쓰기</a>
 </body>
 </html>

@@ -11,6 +11,24 @@
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
+	
+	<!-- Interceptor -->
+		<beans:bean class="com.iu.interceptor.TeacherInterceptor" id="teacher"></beans:bean>
+		<beans:bean class="com.iu.interceptor.AuthorInterceptor" id="author"></beans:bean>
+		<interceptors>
+		<interceptor>
+				<mapping path="/notice/noticeWrite"/>
+				<beans:ref bean="author"/>
+			</interceptor>
+		
+		
+			<interceptor>
+				<mapping path="/notice/noticeWrite"/>
+				<mapping path="/qna/qnaWrite"/>
+				<beans:ref bean="teacher"/>
+			</interceptor>
+		
+		</interceptors>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
@@ -34,7 +52,8 @@
 	</beans:bean>
 
 	<context:component-scan base-package="com.iu.s4" />
-
+	<context:component-scan base-package="com.iu.exception"/>
+	
 
 
 </beans:beans>
